@@ -1,4 +1,3 @@
 # dalbatools
-Script for installing my recon tools.
-
+Script for install and configure my daily recon tools.
 Debian Based only.
