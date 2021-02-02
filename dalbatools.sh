@@ -82,7 +82,13 @@ go get -v github.com/hakluke/haktldextract;
 #gau
 GO111MODULE=on go get -u -v github.com/lc/gau;
 #nuclei
-GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei/
+GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei/;
+#html-tools
+go get -u -v github.com/tomnomnom/hacks/html-tool;
+#dalfox
+go get -u -v github.com/hahwul/dalfox;
+#assetfinder
+go get -u -v github.com/tomnomnom/assetfinder
 
 #installing other tools which needs more setup
 #github-search
