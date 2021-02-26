@@ -1,44 +1,28 @@
-# dalbatools
-Script for install and configure my daily recon tools.
+# theGreatRecon
+Note that the script isn't 100% automated. it gets you to type some Y or A in it.
+
+script for installing and configuring my daily recon tools.
 Debian Based only.
 
 ====
 
-it creates:
+the script creates:
 ~/go
 ~/go/bin
 ~/go/pkg
 ~/go/src
 ~/tools
 
-it installs:
-
-    Anew
-    Qsreplace
-    Subfinder
-    Gospider
-    Github-Search
-    Amass
-    Hakrawler
-    Gargs
-    Chaos
-    Httpx
-    Jaeles
-    Findomain
-    Gf
-    Unew
-    Rush
-    Jsubfinder
-    Shuffledns
-    haktldextract
-    Gau
-    ffuf
-    nuclei
+and install all tools necessary for running properly:
+    -   nahamsec's lazyrecon script
+    -   ofjaaaah's recon script
+    -   almost all of Kingofbugbounty tips oneliners
 
 ====
 
-ofjaaaaah.sh is the recon script from https://github.com/KingOfBugbounty/KingOfBugBountyTips and all the tools installed by dalbatools.sh makes it run properly.
-
-Please remember to change YOURAPIKEY on ofjaaaaah.sh's github-search
+Please remember to:
+    -   change YOURAPIKEY on ofjaaaaah.sh at github-search
+    -   set up your AWS config file on ~/.aws
+    -   get me on twitter @dalbonip
 
 :)

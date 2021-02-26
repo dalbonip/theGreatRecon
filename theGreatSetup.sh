@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "setting up your linux for some recon :)"
+sleep 1;
 sudo apt update;
 # mkdir tools on user's dir
 mkdir ~/tools;
@@ -27,6 +29,7 @@ sudo apt-get install -y python-dnspython
 sudo apt-get install -y git gitk
 sudo apt-get install -y rename
 sudo apt-get install -y xargs
+sudo apt-get install -y snapd
 
 
 #####instaling go, configuring it into path and making ~/go/ the GOPATH
@@ -64,26 +67,6 @@ select choice in "${choices[@]}"; do
 done
 fi
 
-
-## wget https://golang.org/dl/go1.15.7.linux-amd64.tar.gz;
-## sudo tar -C /usr/local -xzf go1.15.7.linux-amd64.tar.gz;
-## export PATH=$PATH:/usr/local/go/bin;
-## echo "export PATH=\"/usr/local/go/bin:$PATH\"" >> ~/.profile;
-## echo "export PATH=\"~/go/bin:$PATH\"" >> ~/.profile;
-## go version;
-## mkdir ~/go;
-## mkdir ~/go/bin;
-## mkdir ~/go/src;
-## mkdir ~/go/pkg;
-## GOPATH=~/go;
-## export GOPATH=~/go;
-## echo "export GOPATH=~/go" >> ~/.profile;
-## echo "GOPATH=~/go" >> ~/.profile;
-## echo "GO PATH ~/go";
-## echo "Creating ~/tools";
-## export PATH=$PATH:~/go/bin;
-## echo "export PATH=\"~/go/bin:$PATH\"" >> ~/.profile;
-
 #####installing phyton2-pip
 curl https://bootstrap.pypa.io/2.7/get-pip.py --output /tmp/get-pip.py;
 sudo python2 /tmp/get-pip.py;
@@ -92,45 +75,45 @@ sudo python2 /tmp/get-pip.py;
 
 #ffuf
 echo "Installing ffuf"
-go get -v -u github.com/ffuf/ffuf
+go get -u github.com/ffuf/ffuf
 echo "Done"
 #anew
 echo "Installing anew"
-go get -v -u github.com/tomnomnom/anew
+go get -u github.com/tomnomnom/anew
 echo "Done"
 #qsreplace
 echo "Installing qsreplace"
-go get -v -u github.com/tomnomnom/qsreplace
+go get -u github.com/tomnomnom/qsreplace
 echo "Done"
 #subfinder
-echo "Installing subifinder"
-GO111MODULE=on go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+echo "Installing subfinder"
+GO111MODULE=on go get github.com/projectdiscovery/subfinder/v2/cmd/subfinder
 echo "Done"
 #gospider
 echo "Installing gospider"
-go get -v -u github.com/jaeles-project/gospider
+go get -u github.com/jaeles-project/gospider
 echo "Done"
 #amass
 echo "Installing amass"
-GO111MODULE=on go get -v github.com/OWASP/Amass/v3/...;
+GO111MODULE=on go get github.com/OWASP/Amass/v3/...;
 echo "Done"
 #hakrawler
 echo "Installing hakrawler"
-go get -v github.com/hakluke/hakrawler
+go get github.com/hakluke/hakrawler
 echo "Done"
 #gargs
 echo "Installing gargs"
-go get -v github.com/brentp/gargs
+go get github.com/brentp/gargs
 echo "Done"
 #chaos
 echo "Installing chaos"
-GO111MODULE=on go get -v github.com/projectdiscovery/chaos-client/cmd/chaos
+GO111MODULE=on go get github.com/projectdiscovery/chaos-client/cmd/chaos
 echo "Downloading Domain to bounty chaos"
-wget https://raw.githubusercontent.com/KingOfBugbounty/KingOfBugBountyTips/master/downlink ; xargs -a downlink -I@ sh -c 'wget @ -q'; mkdir bounty ; unzip '*.zip' -d bounty/ ; rm -rf *zip ; cat bounty/*.txt >> allbounty ; sort -u allbounty >> domainsBOUNTY ; rm -rf allbounty bounty/ ; echo '@ofjaaaah regards'
+wget https://raw.githubusercontent.com/KingOfBugbounty/KingOfBugBountyTips/master/downlink ; xargs -a downlink -I@ bash -c 'wget @ -q'; mkdir bounty ; unzip '*.zip' -d bounty/ ; rm -rf *zip ; cat bounty/*.txt >> allbounty ; sort -u allbounty >> domainsBOUNTY ; rm -rf allbounty bounty/ ; echo '@ofjaaaah regards'
 echo "Done"
 #httpx
 echo "Installing httpx"
-GO111MODULE=on go get -v github.com/projectdiscovery/httpx/cmd/httpx
+GO111MODULE=on go get github.com/projectdiscovery/httpx/cmd/httpx
 echo "Done"
 #jaeles
 echo "Installing jaeles"
@@ -138,15 +121,15 @@ GO111MODULE=on go get github.com/jaeles-project/jaeles
 echo "Done"
 #gf
 echo "Installing gf"
-go get -v -u github.com/tomnomnom/gf
+go get -u github.com/tomnomnom/gf
 echo "Done"
 #unew
 echo "Installing unew"
-go get -v -u github.com/dwisiswant0/unew
+go get -u github.com/dwisiswant0/unew
 echo "Done"
 #rush
 echo "Installing rush"
-go get -v -u github.com/shenwei356/rush/
+go get -u github.com/shenwei356/rush/
 echo "Done"
 #jsubfinder
 echo "Installing jsubfinder"
@@ -157,38 +140,38 @@ wget https://raw.githubusercontent.com/hiddengearz/jsubfinder/master/.jsf_signat
 echo "Done"
 #shuffledns
 echo "Installing shuffledns"
-GO111MODULE=on go get -v github.com/projectdiscovery/shuffledns/cmd/shuffledns;
+GO111MODULE=on go get github.com/projectdiscovery/shuffledns/cmd/shuffledns;
 echo "Done"
 #haktldextract
 echo "Installing haktldextract"
-go get -v github.com/hakluke/haktldextract;
+go get github.com/hakluke/haktldextract;
 echo "Done"
 #gau
 echo "Installing gau"
-GO111MODULE=on go get -u -v github.com/lc/gau;
+GO111MODULE=on go get -u github.com/lc/gau;
 echo "Done"
 #nuclei
 echo "Installing nuclei"
-GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei/;
+GO111MODULE=on go get github.com/projectdiscovery/nuclei/v2/cmd/nuclei/;
 echo "Done"
 echo "installing Nuclei templates"
 nuclei -update-templates
 echo "Done"
 #html-tools
 echo "Installing html-tools"
-go get -u -v github.com/tomnomnom/hacks/html-tool;
+go get -u github.com/tomnomnom/hacks/html-tool;
 echo "Done"
 #dalfox
 echo "Installing dalfox"
-go get -u -v github.com/hahwul/dalfox;
+go get -u github.com/hahwul/dalfox;
 echo "Done"
 #assetfinder
 echo "Installing assetfinder"
-go get -u -v github.com/tomnomnom/assetfinder
+go get -u github.com/tomnomnom/assetfinder
 echo "Done"
 #kxss
 echo "Installing kxss"
-go get -v github.com/tomnomnom/hacks/kxss
+go get github.com/tomnomnom/hacks/kxss
 echo "Done"
 
 #installing other tools which needs more setup
