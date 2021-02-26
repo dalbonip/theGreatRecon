@@ -1,7 +1,9 @@
 # theGreatRecon
 Note that the script isn't 100% automated. it gets you to type some Y or A in it.
 
-script for installing and configuring my daily recon tools.
+======
+
+theGreatRecon is the Script for installing and configuring my daily recon tools.
 
 Debian Based only.
 
