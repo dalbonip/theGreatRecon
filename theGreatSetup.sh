@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "setting up your linux for some recon :)"
-sleep 1;
+sleep 2;
 sudo apt update;
 # mkdir tools on user's dir
 mkdir ~/tools;
@@ -73,105 +73,137 @@ sudo python2 /tmp/get-pip.py;
 
 #####installing go tools
 
-#ffuf
+#install ffuf
 echo "Installing ffuf"
 go get -u github.com/ffuf/ffuf
 echo "Done"
-#anew
+
+#install anew
 echo "Installing anew"
 go get -u github.com/tomnomnom/anew
 echo "Done"
-#qsreplace
+
+#install qsreplace
 echo "Installing qsreplace"
 go get -u github.com/tomnomnom/qsreplace
 echo "Done"
-#subfinder
+
+#install subfinder
 echo "Installing subfinder"
 GO111MODULE=on go get github.com/projectdiscovery/subfinder/v2/cmd/subfinder
 echo "Done"
-#gospider
+
+#install gospider
 echo "Installing gospider"
 go get -u github.com/jaeles-project/gospider
 echo "Done"
-#amass
+
+#install amass
 echo "Installing amass"
 GO111MODULE=on go get github.com/OWASP/Amass/v3/...;
 echo "Done"
-#hakrawler
+
+#install hakrawler
 echo "Installing hakrawler"
 go get github.com/hakluke/hakrawler
 echo "Done"
-#gargs
+
+#install gargs
 echo "Installing gargs"
 go get github.com/brentp/gargs
 echo "Done"
-#chaos
+
+#install chaos
 echo "Installing chaos"
 GO111MODULE=on go get github.com/projectdiscovery/chaos-client/cmd/chaos
 echo "Downloading Domain to bounty chaos"
 wget https://raw.githubusercontent.com/KingOfBugbounty/KingOfBugBountyTips/master/downlink ; xargs -a downlink -I@ bash -c 'wget @ -q'; mkdir bounty ; unzip '*.zip' -d bounty/ ; rm -rf *zip ; cat bounty/*.txt >> allbounty ; sort -u allbounty >> domainsBOUNTY ; rm -rf allbounty bounty/ ; echo '@ofjaaaah regards'
 echo "Done"
-#httpx
+
+#install httpx
 echo "Installing httpx"
 GO111MODULE=on go get github.com/projectdiscovery/httpx/cmd/httpx
 echo "Done"
-#jaeles
+
+#install jaeles
 echo "Installing jaeles"
 GO111MODULE=on go get github.com/jaeles-project/jaeles
 echo "Done"
-#gf
+
+#install gf
 echo "Installing gf"
 go get -u github.com/tomnomnom/gf
 echo "Done"
-#unew
+
+#install unew
 echo "Installing unew"
 go get -u github.com/dwisiswant0/unew
 echo "Done"
-#rush
+
+#install rush
 echo "Installing rush"
 go get -u github.com/shenwei356/rush/
 echo "Done"
-#jsubfinder
+
+#install jsubfinder
 echo "Installing jsubfinder"
 go get -u github.com/hiddengearz/jsubfinder;
 echo "Done"
 echo "downloading jsf_signatures for jsubfinder"
 wget https://raw.githubusercontent.com/hiddengearz/jsubfinder/master/.jsf_signatures.yaml && mv .jsf_signatures.yaml ~/.jsf_signatures.yaml;
 echo "Done"
-#shuffledns
+
+#install shuffledns
 echo "Installing shuffledns"
 GO111MODULE=on go get github.com/projectdiscovery/shuffledns/cmd/shuffledns;
 echo "Done"
-#haktldextract
+
+#install haktldextract
 echo "Installing haktldextract"
 go get github.com/hakluke/haktldextract;
 echo "Done"
-#gau
+
+#install gau
 echo "Installing gau"
 GO111MODULE=on go get -u github.com/lc/gau;
 echo "Done"
-#nuclei
+
+#install nuclei
 echo "Installing nuclei"
 GO111MODULE=on go get github.com/projectdiscovery/nuclei/v2/cmd/nuclei/;
 echo "Done"
 echo "installing Nuclei templates"
 nuclei -update-templates
 echo "Done"
-#html-tools
+
+#install html-tools
 echo "Installing html-tools"
 go get -u github.com/tomnomnom/hacks/html-tool;
 echo "Done"
-#dalfox
+
+#install dalfox
 echo "Installing dalfox"
 go get -u github.com/hahwul/dalfox;
 echo "Done"
-#assetfinder
+
+#install assetfinder
 echo "Installing assetfinder"
 go get -u github.com/tomnomnom/assetfinder
 echo "Done"
-#kxss
+
+#install kxss
 echo "Installing kxss"
 go get github.com/tomnomnom/hacks/kxss
+echo "Done"
+
+#install burl
+echo "Installing Burl"
+go get github.com/tomnomnom/burl
+echo "Done"
+
+#install AntiBurl
+echo "Installing Anti-burl"
+go get github.com/tomnomnom/hacks/anti-burl
 echo "Done"
 
 #installing other tools which needs more setup
@@ -213,6 +245,32 @@ git clone https://github.com/devanshbatham/ParamSpider.git ~/tools/paramspider;
 cd ~/tools/paramspider;
 python3 -m pip install -r requirements.txt;
 echo "done"
+
+#install secretfinder
+echo "installing secretfinder.py"
+cd ~/tools;
+git clone https://github.com/m4ll0k/SecretFinder.git ~/tools/SecretFinder;
+cd ~/tools/SecretFinder;
+python2 -m pip install -r ~/tools/SecretFinder/requirements.txt
+python3 -m pip install -r ~/tools/SecretFinder/requirements.txt
+echo "Done"
+
+#install JSScanner
+echo "Installing JSScanner"
+cd ~/tools;
+git clone https://github.com/0x240x23elu/JSScanner.git ~/tools/JSScanner;
+cd ~/tools/JSScanner;
+python3 -m pip install -r ~/tools/JSScanner/requirements.txt;
+echo "Done"
+
+#install arjun
+echo "installing Arjun"
+cd ~/tools;
+git clone https://github.com/s0md3v/Arjun.git ~/tools/Arjun;
+cd ~/tools/Arjun;
+python3 ~/tools/Arjun/setup.py install;
+cd ~/tools;
+echo "Done"
 
 #install ntHiM
 echo "installing nthim"
@@ -328,10 +386,18 @@ cat dns-Jhaddix.txt | head -n -14 > clean-jhaddix-dns.txt
 cd ~/tools/
 echo "done"
 
+#Getting all tools of https://github.com/KingOfBugbounty/Bug-Bounty-Toolz into our ~/tools dir :)
+echo "Getting all tools on KingOfBugBounty/Bug-Bouty-Toolz on our dir :)"
+cd ~/tools/
+git clone https://github.com/KingOfBugbounty/Bug-Bounty-Toolz.git ~/tools/bbtools
+mv ~/tools/bbtools/* ~/tools/.
+rm -r ~/tools/bbtools
+echo "done"
 
 
 echo -e "\n\n\n\n\n\nDone! All tools are set up in ~/tools"
 ls -la
+echo -e "\n\n"
 echo "Don't forget to set up AWS credentials in ~/.aws/!"
 echo "Don't forget to set up GITHUB Token in your OFJAAAAH.sh script!"
 echo "in order to install Axion, set up a vps and Security trails acc and run the installation script:"
