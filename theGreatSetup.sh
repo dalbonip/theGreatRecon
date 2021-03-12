@@ -68,7 +68,7 @@ done
 fi
 
 #####installing phyton2-pip
-curl https://bootstrap.pypa.io/2.7/get-pip.py --output /tmp/get-pip.py;
+curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output /tmp/get-pip.py;
 sudo python2 /tmp/get-pip.py;
 
 #####installing go tools
