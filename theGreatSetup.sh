@@ -394,9 +394,12 @@ mv ~/tools/bbtools/* ~/tools/.
 rm -r ~/tools/bbtools
 echo "done"
 
+echo 'source ~/.profile' >> ~/.bashrc
+echo 'source ~/.profile' >> ~/.zshrc
 
 echo -e "\n\n\n\n\n\nDone! All tools are set up in ~/tools"
-ls -la
+ls ~/tools/
+ls ~/go/bin/
 echo -e "\n\n"
 echo "Don't forget to set up AWS credentials in ~/.aws/!"
 echo "Don't forget to set up GITHUB Token in your OFJAAAAH.sh script!"
