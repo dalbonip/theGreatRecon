@@ -37,3 +37,15 @@ Please remember to:
     -   get me on twitter @dalbonip
 
 :)
+
+====
+Suggested order to use scripts:
+    1- theGreatSetup.sh to setup tools
+    1.1 - change the github api token on ofjaaaah.sh
+    2- ofjaaaah.sh DOMAIN
+    3- geturls.sh to get urls from waybackurl and gau
+    4- waybacksecrets.sh to gather secrets from js files
+    5- getparamsxss.sh to get params from crawling and geturls.sh result
+    6- xsscan.sh to scan those params for xss
+    7- xsscan_blind.sh (remember to put your own xsshunter url)
+    8- recontonuclei.sh
