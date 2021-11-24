@@ -8,10 +8,6 @@ cd ~/tools;
 
 #####installing rust
 
-#if wsl
-#curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh;
-
-#if linux
 curl https://sh.rustup.rs -sSf | sh
 
 #####installing tools && dependencies
@@ -51,10 +47,12 @@ select choice in "${choices[@]}"; do
 					export GOROOT=/usr/local/go
 					export GOPATH=$HOME/go
 					export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-					echo 'export GOROOT=/usr/local/go' >> ~/.profile
-					echo 'export GOPATH=$HOME/go'	>> ~/.profile			
-					echo 'export PATH=$GOPATH/bin:$GOROOT/bin:$PATH' >> ~/.profile	
-					source ~/.profile
+					echo 'export GOROOT=/usr/local/go' >> ~/.bashrc
+					echo 'export GOPATH=$HOME/go'	>> ~/.bashrc			
+					echo 'export PATH=$GOPATH/bin:$GOROOT/bin:$PATH' >> ~/.bashrc	
+					echo 'export GOROOT=/usr/local/go' >> ~/.zshrc
+					echo 'export GOPATH=$HOME/go'	>> ~/.zshrc			
+					echo 'export PATH=$GOPATH/bin:$GOROOT/bin:$PATH' >> ~/.zshrc	
 					sleep 1
 					break
 					;;
@@ -116,8 +114,6 @@ echo "Done"
 #install chaos
 echo "Installing chaos"
 GO111MODULE=on go get github.com/projectdiscovery/chaos-client/cmd/chaos
-echo "Downloading Domain to bounty chaos"
-wget https://raw.githubusercontent.com/KingOfBugbounty/KingOfBugBountyTips/master/downlink ; xargs -a downlink -I@ bash -c 'wget @ -q'; mkdir bounty ; unzip '*.zip' -d bounty/ ; rm -rf *zip ; cat bounty/*.txt >> allbounty ; sort -u allbounty >> domainsBOUNTY ; rm -rf allbounty bounty/ ; echo '@ofjaaaah regards'
 echo "Done"
 
 #install httpx
@@ -253,6 +249,15 @@ git clone https://github.com/m4ll0k/SecretFinder.git ~/tools/SecretFinder;
 cd ~/tools/SecretFinder;
 python2 -m pip install -r ~/tools/SecretFinder/requirements.txt
 python3 -m pip install -r ~/tools/SecretFinder/requirements.txt
+echo "Done"
+
+#install linkfinder
+echo "installing linkfinder.py"
+cd ~/tools;
+git clone git clone https://github.com/GerbenJavado/LinkFinder.git ~/tools/LinkFinder;
+cd ~/tools/LinkFinder;
+python3 -m pip install -r ~/tools/LinkFinder/requirements.txt
+python3 ~/tools/LinkFinder/setup.py install
 echo "Done"
 
 #install JSScanner
@@ -393,9 +398,6 @@ git clone https://github.com/KingOfBugbounty/Bug-Bounty-Toolz.git ~/tools/bbtool
 mv ~/tools/bbtools/* ~/tools/.
 rm -r ~/tools/bbtools
 echo "done"
-
-echo 'source ~/.profile' >> ~/.bashrc
-echo 'source ~/.profile' >> ~/.zshrc
 
 echo -e "\n\n\n\n\n\nDone! All tools are set up in ~/tools"
 ls ~/tools/
