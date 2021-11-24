@@ -39,7 +39,9 @@ Please remember to:
 :)
 
 ====
+
 Suggested order to use scripts:
+
     1- theGreatSetup.sh to setup tools
     1.1 - change the github api token on ofjaaaah.sh
     2- ofjaaaah.sh DOMAIN
