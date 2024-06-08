@@ -11,12 +11,10 @@ theGreatSetup.sh is the Script for installing and configuring my daily recon too
 ### Debian Based only.
 
 #### Kali linux VPS recommended due to high network traffic used by AMASS
-then debian.
-if not, other debian based distros. please.
-
+then debian other debian based distros.
 ====
 
-the ensure instalation of Go, Ruby, Rust, Python. everything installed on:
+the script ensure instalation of Go, Ruby, Rust, Python. everything installed on:
     -   /opt
     -   /usr/local/bin
     -   ./local/bin
