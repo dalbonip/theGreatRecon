@@ -1,496 +1,445 @@
 #!/bin/bash
-echo "setting up your linux for some recon :)"
-sleep 2;
-echo "This script is for debian based distros (apt install) continue?"
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # No Color
+
+echo -e "\nSetting up your linux for some recon :)${NC}\n"
+echo 'PLEASE "sudo apt update && sudo apt upgrade" FIRST'
+sleep 1;
+echo -e "\n "
+echo -e "\nThis script is for debian based distros (apt install).  it will install GO, RUST, PYTHON, RUBY along recon scripts to GOPATH or /opt. continue?"
 PS3="Please select an option : "
 choices=("yes" "no")
 select choice in "${choices[@]}"; do
   case $choice in
     yes)
-			echo "installing..."
+			echo -e "\nOK.${NC}\n"
 			sleep 1
 			break
 			;;
 		no)
-			echo "Please install go and rerun this script"
-			echo "Aborting installation..."
+			echo -e "\nAborting installation..."
+			exit 1
+			;;
+	esac	
+done
+PS3="Did you update and upgrade your system before running this script? : "
+choices=("yes" "no")
+select choice in "${choices[@]}"; do
+  case $choice in
+    yes)
+			echo -e "\nOK.${NC}\n"
+			sleep 1
+			break
+			;;
+		no)
+			echo -e 'PLEASE "sudo apt update && sudo apt upgrade" FIRST'
 			exit 1
 			;;
 	esac	
 done
 
-sudo apt update;
-mkdir ~/tools;
-cd ~/tools;
+echo -e "\n${GREEN}[+] Updating package list:${NC}\n"
+sudo apt update -y;
 
-#####installing rust
+## setting some path variables for running binaries
 
+
+cd /opt;
+#####Installing rust
+echo -e "\n${GREEN}[+] Installing Rust:${NC}\n"
 curl https://sh.rustup.rs -sSf | sh
 
-#####installing tools && dependencies
-
-sudo apt install -y python2 python3 python3-pip git gitk curl jq ruby-dev perl packer rsync fzf libcurl4-openssl-dev libssl-dev libcurl4-openssl-dev libxml2 libxml2-dev libxslt1-dev ruby-dev build-essential libgmp-dev zlib1g-dev build-essential libssl-dev libffi-dev python2-dev python-setuptools libldns-dev gitk rename snapd libpcap-dev
-
+#####Installing tools && dependencies
+echo -e "\n${GREEN}[+] Installing Python:${NC}\n"
+sudo apt install -y sudo python3 python3-pip python-setuptools
+echo -e "\n${GREEN}[+] Installing Ruby:${NC}\n"
+sudo apt install -y ruby ruby-dev
+sudo apt install -y git gitk curl jq perl packer rsync fzf libcurl4-openssl-dev libssl-dev libcurl4-openssl-dev libxml2 libxml2-dev libxslt1-dev build-essential libgmp-dev zlib1g-dev build-essential libssl-dev libffi-dev  libldns-dev gitk rename snapd libpcap-dev pipx ntpdate flameshot exiftool nmap
+sudo apt install -y sqlmap 2> /dev/null
+sudo apt install -y chromium 2> /dev/null
+echo -e "\n${GREEN}[+] Installing Go Lang:${NC}\n"
+sudo apt install -y golang 2> /dev/null
 
 #####instaling go, configuring it into path and making ~/go/ the GOPATH
-
 cd tools;
 
-if [[ -z "$GOPATH" ]];then
-echo "It looks like go is not installed, would you like to install it now"
+echo -e "\nWould you like to add GO and python binaries to PATH (you only need to do it once)?"
 PS3="Please select an option : "
 choices=("yes" "no")
 select choice in "${choices[@]}"; do
         case $choice in
                 yes)
+					# pip binaries into PATH
+					export PATH="$HOME/.local/bin:$PATH"
+					echo 'source $HOME/.reconrc' >> ~/.zshrc
+					echo 'source $HOME/.reconrc' >> ~/.bashrc
+					# go binaries into PATH
+					export PATH="$HOME/go/bin:$PATH"
+					echo 'export PATH="$HOME/go/bin:$PATH"' >> ~/.reconrc
 
-					echo "Installing Golang"
-					wget https://go.dev/dl/go1.18.2.linux-amd64.tar.gz
-					sudo tar -C /usr/local -xzf go1.18.2.linux-amd64.tar.gz
-					export GOROOT=/usr/local/go
-					export GOPATH=$HOME/go
-					export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-					export PATH=$PATH:/usr/local/go/bin
-					echo 'export GOROOT=/usr/local/go' >> ~/.bashrc
-					echo 'export GOPATH=$HOME/go'	>> ~/.bashrc			
-					echo 'export PATH=$GOPATH/bin:$GOROOT/bin:$PATH' >> ~/.bashrc
-					echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
-					echo 'export GOROOT=/usr/local/go' >> ~/.zshrc
-					echo 'export GOPATH=$HOME/go'	>> ~/.zshrc			
-					echo 'export PATH=$GOPATH/bin:$GOROOT/bin:$PATH' >> ~/.zshrc	
-					echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.zshrc
 					sleep 1
 					break
 					;;
 				no)
-					echo "Please install go and rerun this script"
-					echo "Aborting installation..."
-					exit 1
+					echo -e "\nOkay, i Trust you. If you yet cannot run go, please re-run the script accepting this, or run the commands on line 65 to 70 on your own${NC}\n"
+					break
 					;;
 	esac	
 done
-fi
 
-#####installing go tools
+# Installing go tools
+echo -e "\n${GREEN}[+] Installing Go Tools:${NC}\n"
+# ffuf
+echo -e "\nInstalling ffuf: ffuf"
+go install github.com/ffuf/ffuf/v2@latest
 
-#install ffuf
-echo "Installing ffuf"
-go install github.com/ffuf/ffuf@latest
-echo "Done"
+# tomnomnom
+echo -e "\nInstalling tomnomnom: anew"
+go install -v github.com/tomnomnom/anew@latest
 
-#install anew
-echo "Installing anew"
-go install github.com/tomnomnom/anew@latest
-echo "Done"
+echo -e "\nInstalling tomnomnom: qsreplace"
+go install -v github.com/tomnomnom/qsreplace@latest
 
-#install qsreplace
-echo "Installing qsreplace"
-go install github.com/tomnomnom/qsreplace@latest
-echo "Done"
+echo -e "\nInstalling tomnomnom: gf"
+go install -v github.com/tomnomnom/gf@latest
 
-#install subfinder
-echo "Installing subfinder"
-go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-echo "Done"
+echo -e "\nInstalling tomnomnom: html-tools"
+go install -v github.com/tomnomnom/hacks/html-tool@latest
 
-#install gospider
-echo "Installing gospider"
-go install github.com/jaeles-project/gospider@latest
-echo "Done"
+echo -e "\nInstalling tomnomnom: assetfinder"
+go install -v github.com/tomnomnom/assetfinder@latest
 
-#install amass
-echo "Installing amass"
-go install -v github.com/OWASP/Amass/v3/...@master
-echo "Done"
+echo -e "\nInstalling tomnomnom: kxss"
+go install -v github.com/tomnomnom/hacks/kxss@latest
 
-#install hakrawler
-echo "Installing hakrawler"
-go install github.com/hakluke/hakrawler@latest
-echo "Done"
+echo -e "\nInstalling tomnomnom: Burl"
+go install -v github.com/tomnomnom/burl@latest
 
-#install gargs
-echo "Installing gargs"
-go install github.com/brentp/gargs@latest
-echo "Done"
+echo -e "\nInstalling tomnomnom: Anti-burl"
+go install -v github.com/tomnomnom/hacks/anti-burl@latest
 
-#install chaos
-echo "Installing chaos"
-go install github.com/projectdiscovery/chaos-client/cmd/chaos@latest
-echo "Done"
+echo -e "\nInstalling tomnomnom: httprobe"
+go install -v github.com/tomnomnom/httprobe@latest
 
-#install httpx
-echo "Installing httpx"
-go install github.com/projectdiscovery/httpx/cmd/httpx@latest
-echo "Done"
+echo -e "\nInstalling tomnomnom: unfurl"
+go install -v github.com/tomnomnom/unfurl@latest
 
-#install jaeles
-echo "Installing jaeles"
-go install github.com/jaeles-project/jaeles@latest
-echo "Done"
+echo -e "\nInstalling tomnomnom: waybackurls"
+go install -v github.com/tomnomnom/waybackurls@latest
 
-#install gf
-echo "Installing gf"
-go install github.com/tomnomnom/gf@latest
-echo "Done"
+echo -e "\nInstalling tomnomnom: filter-resolved"
+go install -v github.com/tomnomnom/hacks/filter-resolved@latest
 
-#install unew
-echo "Installing unew"
-go install github.com/dwisiswant0/unew@latest
-echo "Done"
+echo -e "\nInstalling tomnomnom: tojson"
+go install -v github.com/tomnomnom/hacks/tojson
 
-#install rush
-echo "Installing rush"
-go install github.com/shenwei356/rush/@latest
-echo "Done"
+# projectdiscovery
+echo -e "\nInstalling projectdiscovery: subfinder"
+go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 
-#install jsubfinder
-echo "Installing jsubfinder"
-go install github.com/hiddengearz/jsubfinder@latest
-echo "Done"
-echo "downloading jsf_signatures for jsubfinder"
-wget https://raw.githubusercontent.com/hiddengearz/jsubfinder/master/.jsf_signatures.yaml && mv .jsf_signatures.yaml ~/.jsf_signatures.yaml;
-echo "Done"
+echo -e "\nInstalling projectdiscovery: chaos"
+go install -v github.com/projectdiscovery/chaos-client/cmd/chaos@latest
 
-#install shuffledns
-echo "Installing shuffledns"
-go install github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
-echo "Done"
+echo -e "\nInstalling projectdiscovery: httpx"
+go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
 
-#install haktldextract
-echo "Installing haktldextract"
-go install github.com/hakluke/haktldextract@latest
-echo "Done"
+echo -e "\nInstalling projectdiscovery: shuffledns"
+go install -v github.com/projectdiscovery/shuffledns/cmd/shuffledns@latest
 
-#install gau
-echo "Installing gau"
-go install github.com/lc/gau@latest
-echo "Done"
-
-#install nuclei
-echo "Installing nuclei"
-go install github.com/projectdiscovery/nuclei/v2/cmd/nuclei/@latest
-echo "Done"
-echo "installing Nuclei templates"
+echo -e "\nInstalling projectdiscovery: nuclei"
+go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
 nuclei -update-templates
-echo "Done"
 
-#install html-tools
-echo "Installing html-tools"
-go install github.com/tomnomnom/hacks/html-tool@latest
-echo "Done"
+echo -e "\nInstalling projectdiscovery: naabu"
+go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
 
-#install dalfox
-echo "Installing dalfox"
-go install github.com/hahwul/dalfox@latest
-echo "Done"
+echo -e "\nInstalling projectdiscovery: notify"
+go install -v github.com/projectdiscovery/notify/cmd/notify@latest
 
-#install assetfinder
-echo "Installing assetfinder"
-go install github.com/tomnomnom/assetfinder@latest
-echo "Done"
+echo -e "\nInstalling projectdiscovery: katana"
+go install -v github.com/projectdiscovery/katana/cmd/katana@latest
 
-#install kxss
-echo "Installing kxss"
-go install github.com/tomnomnom/hacks/kxss@latest
-echo "Done"
+# jaeles-project
+echo -e "\nInstalling jaeles-project: gospider"
+go install -v github.com/jaeles-project/gospider@latest
 
-#install burl
-echo "Installing Burl"
-go install github.com/tomnomnom/burl@latest
-echo "Done"
+echo -e "\nInstalling jaeles-project: jaeles"
+go install -v github.com/jaeles-project/jaeles@latest
 
-#install AntiBurl
-echo "Installing Anti-burl"
-go install github.com/tomnomnom/hacks/anti-burl@latest
-echo "Done"
+# OWASP
+echo -e "\nInstalling OWASP: amass"
+go install -v github.com/owasp-amass/amass/v4/...@master
 
-echo "installing httprobe"
-go install github.com/tomnomnom/httprobe@latest
-echo "done"
+# hakluke
+echo -e "\nInstalling hakluke: hakrawler"
+go install -v github.com/hakluke/hakrawler@latest
 
-echo "installing unfurl"
-go install github.com/tomnomnom/unfurl@latest
-echo "done"
+echo -e "\nInstalling hakluke: haktldextract"
+go install -v github.com/hakluke/haktldextract@latest
 
-echo "installing waybackurls"
-go install github.com/tomnomnom/waybackurls@latest
-echo "done"
+echo -e "\nInstalling hakluke: hakrevdns"
+go install -v github.com/hakluke/hakrevdns@latest
 
-echo "installing chromedp/chromedp"
-go install github.com/chromedp/chromedp@latest
-echo "done"
+echo -e "\nInstalling hakluke: haklistgen"
+go install -v github.com/hakluke/haklistgen@latest
 
-echo "installing ferreiraklet/airixss"
-go install github.com/ferreiraklet/airixss@latest
-echo "done"
+# brentp
+echo -e "\nInstalling brentp: gargs"
+go install -v github.com/brentp/gargs@latest
 
-echo "installing edoardottt/cariddi"
-go install github.com/edoardottt/cariddi@latest
-echo "done"
+# lc
+echo -e "\nInstalling lc: gau"
+go install -v github.com/lc/gau/v2/cmd/gau@latest
 
-echo "installing tomnomnom/hacks/filter-resolved"
-go install github.com/tomnomnom/hacks/filter-resolved@latest
-echo "done"
+echo -e "\nInstalling lc: subjs"
+go install -v github.com/lc/subjs@latest
 
-echo "installing takshal/freq"
-go install github.com/takshal/freq@latest
-echo "done"
+# dwisiswant0
+echo -e "\nInstalling dwisiswant0: unew"
+go install -v github.com/dwisiswant0/unew@latest
 
-echo "installing sensepost/gowitness"
-go install github.com/sensepost/gowitness@latest
-echo "done"
+# shenwei356
+echo -e "\nInstalling shenwei356: rush"
+go install -v github.com/shenwei356/rush/@latest
 
-echo "installing deletescape/goop"
-go install github.com/deletescape/goop@latest
-echo "done"
+# hiddengearz
+echo -e "\nInstalling hiddengearz: jsubfinder"
+go install -v github.com/hiddengearz/jsubfinder@latest
+wget https://raw.githubusercontent.com/hiddengearz/jsubfinder/master/.jsf_signatures.yaml -O ~/.jsf_signatures.yaml
 
-echo "installing 003random/getJS"
-go install github.com/003random/getJS@latest
-echo "done"
+# hahwul
+echo -e "\nInstalling hahwul: dalfox"
+go install -v github.com/hahwul/dalfox@latest
 
-echo "installing hakluke/hakrevdns"
-go install github.com/hakluke/hakrevdns@latest
-echo "done"
+# chromedp
+echo -e "\nInstalling chromedp: chromedp"
+go install -v github.com/chromedp/chromedp@latest
 
-echo "installing hakluke/haktldextract"
-go install github.com/hakluke/haktldextract@latest
-echo "done"
+# ferreiraklet
+echo -e "\nInstalling ferreiraklet: airixss"
+go install -v github.com/ferreiraklet/airixss@latest
 
-echo "installing hakluke/haklistgen"
-go install github.com/hakluke/haklistgen@latest
-echo "done"
+# edoardottt
+echo -e "\nInstalling edoardottt: cariddi"
+go install -v github.com/edoardottt/cariddi@latest
 
-echo "installing projectdiscovery/naabu/v2/cmd/naabu"
-go install github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
-echo "done"
+# takshal
+echo -e "\nInstalling takshal: freq"
+go install -v github.com/takshal/freq@latest
 
-echo "installing projectdiscovery/notify/cmd/notify"
-go install github.com/projectdiscovery/notify/cmd/notify@latest
-echo "done"
+# sensepost
+echo -e "\nInstalling sensepost: gowitness"
+go install -v github.com/sensepost/gowitness@latest
 
-echo "installing detectify/page-fetch"
-go install github.com/detectify/page-fetch@latest
-echo "done"
+# deletescape
+echo -e "\nInstalling deletescape: goop"
+go install -v github.com/deletescape/goop@latest
 
-#installing other tools which needs more setup commands and python2/3 pip2/3
+# 003random
+echo -e "\nInstalling 003random: getJS"
+go install -v github.com/003random/getJS@latest
 
-#gargs
-wget https://github.com/brentp/gargs/releases/download/v0.3.9/gargs_linux;
-sudo mv gargs_linux /usr/local/bin/gargs
+# detectify
+echo -e "\nInstalling detectify: page-fetch"
+go install -v github.com/detectify/page-fetch@latest
 
-#####installing phyton2-pip
-curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output /tmp/get-pip.py;
-sudo python2 /tmp/get-pip.py;
-sudo apt install python-is-python3;
+# erickfernandox
+echo -e "\nInstalling erickfernandox: slicepathsurl"
+go install -v github.com/erickfernandox/slicepathsurl@latest
 
-#github-search
-echo "Installing github search on ~/tools/github-search"
-git clone https://github.com/gwen001/github-search.git ~/tools/github-search;
-python2 -m pip install -r ~/tools/github-search/requirements2.txt;
-python2 -m pip install -r ~/tools/github-search/requirements3.txt;
-python3 -m pip install -r ~/tools/github-search/requirements2.txt;
-python3 -m pip install -r ~/tools/github-search/requirements3.txt;
-echo "Done"
+# dwisiswant0
+echo -e "\nInstalling dwisiswant0: cf-check"
+go install -v github.com/dwisiswant0/cf-check@latest
 
-#dnsgen
-python3 -m pip install dnsgen
+# J3ssie
+echo -e "\nInstalling J3ssie: metabigor"
+go install -v https://github.com/j3ssie/metabigor@latest
 
+# HuntDownProject
+echo -e "\nInstalling hednsextractor: hednsextractor"
+go install -v github.com/HuntDownProject/hednsextractor/cmd/hednsextractor@latest
+
+# ropnop
+echo -e "\nInstalling ropnop: kerbrute"
+go install -v github.com/ropnop/kerbrute@master
+
+## Installing Rust tools
+echo -e "\n${GREEN}[+] Installing Rust Tools:${NC}\n"
 #findomain
-echo "Installing findomain"
-git clone https://github.com/Edu4rdSHL/findomain.git ~/tools/findomain;
+echo -e "\nInstalling findomain"
+sudo git clone https://github.com/Edu4rdSHL/findomain.git /opt/findomain;
 cd findomain; cargo build --release;
 sudo cp ./target/release/findomain /usr/bin/;
 findomain;
-cd ~/tools/;
-echo "Done"
+cd /opt/;
 
-#Interlace
-echo "Installing Interlace"
-git clone https://github.com/codingo/Interlace.git ~/tools/interlace;
-python3 ~/tools/interlace/setup.py install;
-echo "Done"
+echo -e "\nInstalling nthim"
+cargo install NtHiM;
 
-#download gitdump
-echo "Installing GitDump"
-cd ~/tools/;
-git clone https://github.com/arthaud/git-dumper.git ~/tools/git-dumper;
-python3 -m pip install -r ~/tools/git-dumper/requirements.txt;
-echo "Done"
+echo -e "\nInstalling Sh1Yo x8"
+cargo install x8;
 
-#install paramspider
-echo "installing paramspider"
-cd ~/tools;
-git clone https://github.com/devanshbatham/ParamSpider.git ~/tools/paramspider;
-cd ~/tools/paramspider;
-python3 -m pip install -r requirements.txt;
-echo "done"
+#Installing python tools
+echo -e "\nInstalling Python tools"
+python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade setuptools
+python3 -m pip install --upgrade wheel
+python3 -m pip install --upgrade twine
+python3 -m pip install --upgrade pyinstaller
+python3 -m pip install dnsgen
+python3 -m pip install impacket
+python3 -m pip install bhedak
+python3 -m pip install shodan
+python3 -m pip install crackmapexec
+python3 -m pip install certipy-ad
 
-#install secretfinder
-echo "installing secretfinder.py"
-cd ~/tools;
-git clone https://github.com/m4ll0k/SecretFinder.git ~/tools/SecretFinder;
-cd ~/tools/SecretFinder;
-python2 -m pip install -r ~/tools/SecretFinder/requirements.txt
-python3 -m pip install -r ~/tools/SecretFinder/requirements.txt
-echo "Done"
+echo -e "\nInstalling github search on /opt/github-search"
+sudo git clone https://github.com/gwen001/github-search.git /opt/github-search;
+python3 -m pip install -r /opt/github-search/requirements.txt;
 
-#install XSSstrike
-echo "installing XSSstrike.py"
-cd ~/tools;
-git clone https://github.com/s0md3v/XSStrike.git ~/tools/XSStrike;
-cd ~/tools/XSStrike;
-python3 -m pip install -r ~/tools/XSStrike/requirements.txt
-echo "Done"
+echo -e "\nInstalling Interlace"
+sudo git clone https://github.com/codingo/Interlace.git /opt/interlace;
+sudo python3 /opt/interlace/setup.py install;
 
-#install linkfinder
-echo "installing linkfinder.py"
-cd ~/tools;
-git clone https://github.com/GerbenJavado/LinkFinder.git ~/tools/LinkFinder;
-cd ~/tools/LinkFinder;
-python3 -m pip install -r ~/tools/LinkFinder/requirements.txt
-python3 ~/tools/LinkFinder/setup.py install
-echo "Done"
+echo -e "\nInstalling Git-Dumper"
+sudo git clone https://github.com/arthaud/git-dumper.git /opt/git-dumper;
+python3 -m pip install -r /opt/git-dumper/requirements.txt;
 
-#install JSScanner
-echo "Installing JSScanner"
-cd ~/tools;
-git clone https://github.com/0x240x23elu/JSScanner.git ~/tools/JSScanner;
-cd ~/tools/JSScanner;
-python3 -m pip install -r ~/tools/JSScanner/requirements.txt;
-echo "Done"
+echo -e "\nInstalling paramspider"
+sudo git clone https://github.com/devanshbatham/ParamSpider.git /opt/paramspider;
+python3 -m pip install -r /opt/paramspider/requirements.txt;
 
-#install arjun
-echo "installing Arjun"
-cd ~/tools;
-git clone https://github.com/s0md3v/Arjun.git ~/tools/Arjun;
-cd ~/tools/Arjun;
-python3 ~/tools/Arjun/setup.py install;
-cd ~/tools;
-echo "Done"
+echo -e "\nInstalling secretfinder.py"
+sudo git clone https://github.com/m4ll0k/SecretFinder.git /opt/SecretFinder;
+python3 -m pip install -r /opt/SecretFinder/requirements.txt
 
-#install ntHiM
-echo "installing nthim"
-cargo install NtHiM
-echo "done"
+echo -e "\nInstalling XSSstrike.py"
+sudo git clone https://github.com/s0md3v/XSStrike.git /opt/XSStrike;
+python3 -m pip install -r /opt/XSStrike/requirements.txt
 
-#install Sh1Yo x8
-echo "installing Sh1Yo x8"
-cargo install x8
-echo "done"
+echo -e "\nInstalling linkfinder.py"
+sudo git clone https://github.com/GerbenJavado/LinkFinder.git /opt/LinkFinder;
+python3 -m pip install -r /opt/LinkFinder/requirements.txt
+sudo python3 /opt/LinkFinder/setup.py install
 
-#install chromium
-echo "Installing Chromium"
-sudo snap install chromium
-echo "done"
+echo -e "\nInstalling JSScanner"
+sudo git clone https://github.com/0x240x23elu/JSScanner.git /opt/JSScanner;
+python3 -m pip install -r /opt/JSScanner/requirements.txt;
 
-cd ~/tools/
-echo "installing JSParser"
-git clone https://github.com/nahamsec/JSParser.git
-cd JSParser*
-sudo python setup.py install
-cd ~/tools/
-echo "done"
+echo -e "\nInstalling Arjun"
+sudo git clone https://github.com/s0md3v/Arjun.git /opt/Arjun;
+sudo python3 /opt/Arjun/setup.py install;
 
-echo "installing Sublist3r"
-git clone https://github.com/aboul3la/Sublist3r.git
-cd Sublist3r*
-pip install -r requirements.txt
-cd ~/tools/
-echo "done"
+echo -e "\nInstalling JSParser"
+sudo git clone https://github.com/nahamsec/JSParser.git /opt/JSParser;
+sudo python /opt/JSParser/setup.py install
 
+echo -e "\nInstalling Sublist3r"
+sudo git clone https://github.com/aboul3la/Sublist3r.git /opt/Sublist3r;
+pip install -r /opt/Sublist3r/requirements.txt
 
-echo "installing teh_s3_bucketeers"
-git clone https://github.com/tomdev/teh_s3_bucketeers.git
-cd ~/tools/
-echo "done"
+echo -e "\nInstalling asnlookup"
+sudo git clone https://github.com/yassineaboukir/asnlookup.git /opt/asnlookup
+pip install -r /opt/asnlookup/requirements.txt
 
+echo -e "\nInstalling sqlmap"
+sudo git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap-dev /opt/sqlmap;
 
-echo "installing wpscan"
-git clone https://github.com/wpscanteam/wpscan.git
+echo -e "\nInstalling knock.py"
+sudo git clone https://github.com/guelfoweb/knock.git /opt/knock;
+
+## Installing Ruby Tools
+echo -e "\n${GREEN}[+] Installing Ruby Tools:${NC}\n"
+
+echo -e "\nInstalling wpscan"
+sudo git clone https://github.com/wpscanteam/wpscan.git /opt/wpscan;
 cd wpscan*
 sudo gem install bundler && bundle install --without test
-cd ~/tools/
-echo "done"
+cd /opt/
 
-echo "installing dirsearch"
-git clone https://github.com/maurosoria/dirsearch.git
-cd ~/tools/
-echo "done"
+sudo gem install logger
+sudo gem install stringio
+sudo gem install winrm
+sudo gem install builder
+sudo gem install erubi
+sudo gem install gssapi
+sudo gem install gyoku
+sudo gem install httpclient
+sudo gem install logging
+sudo gem install little-plugger
+sudo gem install nori
+sudo gem install rubyntlm
+sudo gem install winrm-fs
+sudo gem install evil-winrm
 
+## Clonning usefull Repos of .sh tools or wordlists
+echo -e "\n${GREEN}[+] Installing Extra Tools and Repos:${NC}\n"
 
-echo "installing lazys3"
-git clone https://github.com/nahamsec/lazys3.git
-cd ~/tools/
-echo "done"
+echo -e "\nInstalling teh_s3_bucketeers"
+sudo git clone https://github.com/tomdev/teh_s3_bucketeers.git /opt/teh_s3_bucketeers;
 
-echo "installing virtual host discovery"
-git clone https://github.com/jobertabma/virtual-host-discovery.git
-cd ~/tools/
-echo "done"
+echo -e "\nInstalling dirsearch"
+sudo git clone https://github.com/maurosoria/dirsearch.git /opt/dirsearch;
 
+echo -e "\nInstalling lazys3"
+sudo git clone https://github.com/nahamsec/lazys3.git /opt/lazys3;
 
-echo "installing sqlmap"
-git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap-dev
-cd ~/tools/
-echo "done"
+echo -e "\nInstalling virtual host discovery"
+sudo git clone https://github.com/jobertabma/virtual-host-discovery.git /opt/virtual-host-discovery;
 
-echo "installing knock.py"
-git clone https://github.com/guelfoweb/knock.git
-cd ~/tools/
-echo "done"
+echo -e "\nInstalling lazyrecon"
+sudo git clone https://github.com/nahamsec/lazyrecon.git /opt/lazyrecon
 
-echo "installing lazyrecon"
-git clone https://github.com/nahamsec/lazyrecon.git
-cd ~/tools/
-echo "done"
+echo -e "\nInstalling crtndstry"
+sudo git clone https://github.com/nahamsec/crtndstry.git /opt/crtndstry
 
-echo "installing nmap"
-sudo apt-get install -y nmap
-echo "done"
+echo -e "\nInstalling Seclists"
+sudo git clone https://github.com/danielmiessler/SecLists.git /opt/SecLists
 
-echo "installing massdns"
-git clone https://github.com/blechschmidt/massdns.git
-cd ~/tools/massdns
-make
-cd ~/tools/
-echo "done"
+echo -e "\nInstalling SharpCollections"
+sudo git clone https://github.com/Flangvik/SharpCollection.git  /opt/SharpCollection
 
-echo "installing asnlookup"
-git clone https://github.com/yassineaboukir/asnlookup.git
-cd ~/tools/asnlookup
-pip install -r requirements.txt
-cd ~/tools/
-echo "done"
+echo -e "\nInstalling massdns"
+sudo git clone https://github.com/blechschmidt/massdns.git /opt
+cd /opt/massdns
+sudo make
+cd /opt/
 
-echo "installing crtndstry"
-git clone https://github.com/nahamsec/crtndstry.git
-echo "done"
+echo -e "\nInstalling urldedupe"
+sudo curl https://github.com/ameenmaali/urldedupe/releases/download/v1.0.4/urldedupe -o /usr/local/bin/urldedupe
 
-echo "downloading Seclists"
-cd ~/tools/
-git clone https://github.com/danielmiessler/SecLists.git
-cd ~/tools/SecLists/Discovery/DNS/
-##THIS FILE BREAKS MASSDNS AND NEEDS TO BE CLEANED
-cat dns-Jhaddix.txt | head -n -14 > clean-jhaddix-dns.txt
-cd ~/tools/
-echo "done"
+echo -e "\nInstalling xray"
+wget https://github.com/chaitin/xray/releases/download/1.9.11/xray_linux_amd64.zip -O /tmp/xray.zip;
+unzip /tmp/xray.zip -d /tmp/xraydir/
+sudo mv /tmp/xraydir/ /usr/local/bin/xray
 
-#Getting all tools of https://github.com/KingOfBugbounty/Bug-Bounty-Toolz into our ~/tools dir :)
-echo "Getting all tools on KingOfBugBounty/Bug-Bouty-Toolz on our dir :)"
-cd ~/tools/
-git clone https://github.com/KingOfBugbounty/Bug-Bounty-Toolz.git ~/tools/bbtools
-mv ~/tools/bbtools/* ~/tools/.
-rm -r ~/tools/bbtools
-echo "done"
+#Getting all tools of https://github.com/KingOfBugbounty/Bug-Bounty-Toolz into our /opt dir :)
+echo -e "\nGetting all tools on KingOfBugBounty/Bug-Bouty-Toolz on our dir :)"
+sudo git clone https://github.com/KingOfBugbounty/Bug-Bounty-Toolz.git /opt/bbtools
+sudo mv /opt/bbtools/* /opt/.
+sudo rm -r /opt/bbtools
 
-echo -e "\n\n\n\n\n\nDone! All tools are set up in ~/tools"
-ls ~/tools/
-ls ~/go/bin/
-echo -e "\n\n"
-echo "Don't forget to set up AWS credentials in ~/.aws/!"
-echo "Don't forget to set up GITHUB Token in your OFJAAAAH.sh script!"
-echo "in order to install Axion, set up a vps and Security trails acc and run the installation script:"
-echo ""
-echo "$ bash <(curl -s https://raw.githubusercontent.com/pry0cc/axiom/master/interact/axiom-configure)"
-echo ""
-echo "ping me at twitter @dalbonip :] "
+sudo chmod +x /opt/*
+sudo chmod +x /usr/local/bin/*
+
+echo -e "\nInstalling Chromium if you are on ubuntu"
+sudo snap install chromium 2> /dev/null;
+
+echo -e "\n\nDone! All tools here:${NC}\n"
+echo -e "\nTolls in /OPT:"
+ls -A /opt/* -d --group-directories-first -X --color=auto;
+echo -e "\nTolls in $HOME/GO/BIN:${NC}\n"
+ls -A ~/go/bin/* -d --group-directories-first -X --color=auto;
+echo -e "\nTolls in $HOME/.LOCAL/BIN:${NC}\n"
+ls -A ~/.local/bin/* -d --group-directories-first -X --color=auto;
+echo -e "\n\n${NC}\n"
+echo -e "\n- Don't forget to set up AWS credentials in ~/.aws/!"
+echo -e "\n- Don't forget to set up GITHUB Token in your OFJAAAAH.sh script!"
+echo -e "\n- Finally, initialize the Shodan CLI with your API key: $ shodan init YOUR_API_KEY"
+echo -e "${NC}\n"
+echo -e "\nin order to install Axion, set up a vps and Security trails acc and run the installation script:"
+echo -e "\n$ bash <(curl -s https://raw.githubusercontent.com/pry0cc/axiom/master/interact/axiom-configure)"
+echo -e "${NC}\n"
+echo -e "\nping me at twitter @dalbonip :] "
