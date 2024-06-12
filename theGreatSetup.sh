@@ -292,7 +292,6 @@ python3 -m pip install dnsgen
 python3 -m pip install impacket
 python3 -m pip install bhedak
 python3 -m pip install shodan
-python3 -m pip install crackmapexec
 python3 -m pip install certipy-ad
 
 echo -e "\nInstalling github search on /opt/github-search"
@@ -349,6 +348,12 @@ sudo git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git sqlmap-dev 
 
 echo -e "\nInstalling knock.py"
 sudo git clone https://github.com/guelfoweb/knock.git /opt/knock;
+
+echo -e "\nInstalling CrackMapExec and NetExec"
+wget https://github.com/byt3bl33d3r/CrackMapExec/releases/download/v5.4.0/cme-ubuntu-latest-3.11.zip -O /tmp/cme.zip;
+unzip /tmp/cme.zip -d /tmp/cme/
+sudo mv /tmp/cme/cme /usr/local/bin/cme
+wget https://github.com/Pennyw0rth/NetExec/releases/download/v1.2.0/nxc -O /usr/local/bin/nxc
 
 ## Installing Ruby Tools
 echo -e "\n${GREEN}[+] Installing Ruby Tools:${NC}\n"
@@ -413,7 +418,7 @@ sudo curl https://github.com/ameenmaali/urldedupe/releases/download/v1.0.4/urlde
 echo -e "\nInstalling xray"
 wget https://github.com/chaitin/xray/releases/download/1.9.11/xray_linux_amd64.zip -O /tmp/xray.zip;
 unzip /tmp/xray.zip -d /tmp/xraydir/
-sudo mv /tmp/xraydir/ /usr/local/bin/xray
+sudo mv /tmp/xraydir/xray_linux_amd64 /usr/local/bin/xray
 
 #Getting all tools of https://github.com/KingOfBugbounty/Bug-Bounty-Toolz into our /opt dir :)
 echo -e "\nGetting all tools on KingOfBugBounty/Bug-Bouty-Toolz on our dir :)"
@@ -427,19 +432,21 @@ sudo chmod +x /usr/local/bin/*
 echo -e "\nInstalling Chromium if you are on ubuntu"
 sudo snap install chromium 2> /dev/null;
 
-echo -e "\n\nDone! All tools here:${NC}\n"
+echo -e "\n\n${GREEN}Done! All tools here:${NC}\n"
 echo -e "\nTolls in /OPT:"
 ls -A /opt/* -d --group-directories-first -X --color=auto;
-echo -e "\nTolls in $HOME/GO/BIN:${NC}\n"
+echo -e "\nTolls in $HOME/GO/BIN:\n"
 ls -A ~/go/bin/* -d --group-directories-first -X --color=auto;
-echo -e "\nTolls in $HOME/.LOCAL/BIN:${NC}\n"
+echo -e "\nTolls in /USR/LOCAL/BIN:\n"
+ls -A /usr/local/bin/* -d --group-directories-first -X --color=auto;
+echo -e "\nTolls in $HOME/.LOCAL/BIN:\n"
 ls -A ~/.local/bin/* -d --group-directories-first -X --color=auto;
-echo -e "\n\n${NC}\n"
+echo -e "\n\n\n"
 echo -e "\n- Don't forget to set up AWS credentials in ~/.aws/!"
 echo -e "\n- Don't forget to set up GITHUB Token in your OFJAAAAH.sh script!"
 echo -e "\n- Finally, initialize the Shodan CLI with your API key: $ shodan init YOUR_API_KEY"
-echo -e "${NC}\n"
+echo -e "\n"
 echo -e "\nin order to install Axion, set up a vps and Security trails acc and run the installation script:"
 echo -e "\n$ bash <(curl -s https://raw.githubusercontent.com/pry0cc/axiom/master/interact/axiom-configure)"
-echo -e "${NC}\n"
+echo -e "\n"
 echo -e "\nping me at twitter @dalbonip :] "
