@@ -425,6 +425,7 @@ echo -e "\nGetting all tools on KingOfBugBounty/Bug-Bouty-Toolz on our dir :)"
 sudo git clone https://github.com/KingOfBugbounty/Bug-Bounty-Toolz.git /opt/bbtools
 sudo mv /opt/bbtools/* /opt/.
 sudo rm -r /opt/bbtools
+sudo rm /opt/README.md
 
 sudo chmod +x /opt/*
 sudo chmod +x /usr/local/bin/*
