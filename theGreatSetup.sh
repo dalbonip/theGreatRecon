@@ -60,12 +60,44 @@ sudo apt install -y git gitk curl jq perl packer rsync fzf libcurl4-openssl-dev 
 sudo apt install -y sqlmap 2> /dev/null
 sudo apt install -y chromium 2> /dev/null
 echo -e "\n${GREEN}[+] Installing Go Lang:${NC}\n"
-sudo apt install -y golang 2> /dev/null
 
 #####instaling go, configuring it into path and making ~/go/ the GOPATH
-cd tools;
+echo -e "\nWould you like to install GO and link GO binaries to PATH (you only need to do it once)?"
+PS3="Please select an option : "
+choices=("yes" "no")
+select choice in "${choices[@]}"; do
+        case $choice in
+                yes)
+					# installing go
+					wget https://dl.google.com/go/go1.21.3.linux-amd64.tar.gz -O /tmp/go1.21.3.linux-amd64.tar.gz
+					cd /tmp
+					sudo tar -xvf /tmp/go1.21.3.linux-amd64.tar.gz
+					sudo mv go /usr/local
+					sudo ln -s /usr/local/go/bin/go /usr/bin/go
+					mkdir $HOME/go
+					mkdir $HOME/go/bin
+					mkdir $HOME/go/src
+					mkdir $HOME/go/pkg
+					# go binaries into PATH
+					export GOROOT=/usr/local/go
+					export GOPATH=$HOME/go
+					export PATH="$HOME/go/bin:$PATH"
 
-echo -e "\nWould you like to add GO and python binaries to PATH (you only need to do it once)?"
+					echo 'export GOROOT=/usr/local/go' >> ~/.reconrc
+					echo 'export GOPATH=$HOME/go' >> ~/.reconrc
+					echo 'export PATH="$HOME/go/bin:$PATH"' >> ~/.reconrc
+
+					sleep 1
+					break
+					;;
+				no)
+					echo -e "\nOkay, i Trust you. If you yet cannot run go, please re-run the script accepting this, or run the commands on line 65 to 70 on your own${NC}\n"
+					break
+					;;
+	esac	
+done
+
+echo -e "\nWould you like link python binaries to PATH (you only need to do it once)?"
 PS3="Please select an option : "
 choices=("yes" "no")
 select choice in "${choices[@]}"; do
@@ -75,15 +107,11 @@ select choice in "${choices[@]}"; do
 					export PATH="$HOME/.local/bin:$PATH"
 					echo 'source $HOME/.reconrc' >> ~/.zshrc
 					echo 'source $HOME/.reconrc' >> ~/.bashrc
-					# go binaries into PATH
-					export PATH="$HOME/go/bin:$PATH"
-					echo 'export PATH="$HOME/go/bin:$PATH"' >> ~/.reconrc
-
 					sleep 1
 					break
 					;;
 				no)
-					echo -e "\nOkay, i Trust you. If you yet cannot run go, please re-run the script accepting this, or run the commands on line 65 to 70 on your own${NC}\n"
+					echo -e "\nContinuing...${NC}\n"
 					break
 					;;
 	esac	
